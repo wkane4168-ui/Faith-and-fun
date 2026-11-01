@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fate & Fun Wheel</title>
+    <title>Fate & Fun with Spin Wheel</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Canvas Confetti CDN -->
@@ -13,263 +13,285 @@
         body {
             font-family: 'Hind Siliguri', sans-serif;
         }
+        .wheel-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .wheel-card:hover {
+            transform: translateY(-5px);
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-between p-4 selection:bg-purple-500 selection:text-white">
+<body class="bg-gradient-to-br from-amber-50 via-rose-50 to-indigo-50 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4 selection:bg-rose-200 selection:text-slate-900">
 
-    <!-- Header -->
-    <header class="w-full max-w-md text-center py-4">
-        <h1 class="text-3xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
-            Fate & Fun Wheel
+    <!-- Header Section -->
+    <header class="w-full max-w-4xl text-center py-8">
+        <h1 class="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-600 via-rose-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm mb-3">
+            Fate & Fun with Spin Wheel
         </h1>
-        <p id="step-indicator" class="text-slate-400 text-sm mt-1">ধাপ ১/৫: রঙের খেলা</p>
+        <div class="inline-block bg-white/80 backdrop-blur-md px-6 py-2 rounded-full border border-rose-200 shadow-sm">
+            <p class="text-rose-600 font-bold text-base md:text-lg">
+                🥳 হই হুল্লোড়! মজায় কাটবে আজকের ওয়েবসাইটে থাকার সময়টুকু ✨
+            </p>
+        </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-md bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col items-center">
+    <!-- Wheels Grid Container (Scrollable Layout) -->
+    <main class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-4">
         
-        <!-- Wheel Title -->
-        <h2 id="wheel-title" class="text-xl font-bold mb-4 text-purple-300 text-center">🎨 Color Palette</h2>
-
-        <!-- Wheel Wrapper -->
-        <div class="relative flex flex-col items-center my-2">
-            <!-- Top Pointer Arrow -->
-            <div class="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[24px] border-b-red-500 z-20 mb-[-10px] filter drop-shadow"></div>
-            
-            <!-- Canvas -->
-            <canvas id="wheelCanvas" width="300" height="300" class="rounded-full border-4 border-slate-700 shadow-inner bg-slate-800"></canvas>
-        </div>
-
-        <!-- Result Display -->
-        <div id="result-box" class="h-12 flex items-center justify-center my-3">
-            <span id="result-text" class="text-lg font-semibold text-emerald-400"></span>
-        </div>
-
-        <!-- Spin Button -->
-        <button id="spin-btn" onclick="startSpin()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 font-bold rounded-xl shadow-lg transition transform active:scale-95 cursor-pointer">
-            স্পিন করুন! 🎡
-        </button>
-
-        <!-- Next Wheel Button (Hidden initially) -->
-        <button id="next-btn" onclick="nextWheel()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl shadow-lg transition hidden mt-3">
-            পরবর্তী হুইল ➡️
-        </button>
-    </main>
-
-    <!-- Summary Modal (Hidden initially) -->
-    <div id="summary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl text-center">
-            <h3 class="text-2xl font-bold text-pink-400 mb-4">🎉 আপনার ভাগ্যের ফলাফল!</h3>
-            <div id="summary-content" class="space-y-3 text-left bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6 text-sm">
-                <!-- Summary items injected via JS -->
+        <!-- Wheel Card 1 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">🎨 ১. রঙের খেলা (Color)</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel0" width="250" height="250" class="rounded-full border-4 border-amber-300 shadow-md bg-white"></canvas>
             </div>
-            <button onclick="resetAll()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 font-bold rounded-xl shadow-lg hover:opacity-90 transition">
-                আবার খেলুন 🔄
+            <div id="result0" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(0)" id="btn0" class="w-full py-2.5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
             </button>
         </div>
-    </div>
+
+        <!-- Wheel Card 2 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">📋 ২. মাস্টার প্ল্যান (Plan)</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel1" width="250" height="250" class="rounded-full border-4 border-rose-300 shadow-md bg-white"></canvas>
+            </div>
+            <div id="result1" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(1)" id="btn1" class="w-full py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
+            </button>
+        </div>
+
+        <!-- Wheel Card 3 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">🔀 ৩. ল্যাকি চয়েস (Choice)</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel2" width="250" height="250" class="rounded-full border-4 border-emerald-300 shadow-md bg-white"></canvas>
+            </div>
+            <div id="result2" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(2)" id="btn2" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
+            </button>
+        </div>
+
+        <!-- Wheel Card 4 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">💍 ৪. ভবিষ্যৎ স্ত্রী (A-Z)</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel3" width="250" height="250" class="rounded-full border-4 border-sky-300 shadow-md bg-white"></canvas>
+            </div>
+            <div id="result3" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(3)" id="btn3" class="w-full py-2.5 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
+            </button>
+        </div>
+
+        <!-- Wheel Card 5 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">🎭 ৫. ভেতরের রূপ (Personality)</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel4" width="250" height="250" class="rounded-full border-4 border-purple-300 shadow-md bg-white"></canvas>
+            </div>
+            <div id="result4" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(4)" id="btn4" class="w-full py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
+            </button>
+        </div>
+
+        <!-- Wheel Card 6 -->
+        <div class="wheel-card bg-white/90 backdrop-blur-sm border border-slate-200 rounded-3xl p-5 shadow-xl flex flex-col items-center justify-between">
+            <h2 class="text-xl font-bold text-indigo-600 text-center mb-2">🔮 ৬. আজকের ভাগ্য ও বন্ধু</h2>
+            <div class="relative flex flex-col items-center my-2">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-rose-500 z-20 mb-[-8px] drop-shadow-md"></div>
+                <canvas id="wheel5" width="250" height="250" class="rounded-full border-4 border-amber-400 shadow-md bg-white"></canvas>
+            </div>
+            <div id="result5" class="h-8 text-center text-rose-600 font-bold text-base my-2"></div>
+            <button onclick="spinSingleWheel(5)" id="btn5" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
+                স্পিন করুন! 🎡
+            </button>
+        </div>
+
+    </main>
 
     <!-- Footer -->
-    <footer class="text-slate-400 text-xs py-4 text-center">
-        ওয়েবসাইট ক্রিয়েটেড বাই নিলয় দাস
+    <footer class="text-slate-600 text-sm font-semibold py-8 text-center border-t border-slate-200 w-full mt-6 bg-white/50 backdrop-blur-sm">
+        ওয়েবসাইট ক্রিয়েটেড বাই নীলাদ্রি দাস
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic & Web Audio Sound Engine -->
     <script>
+        // Web Audio API for ticking sound effect
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTickSound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        }
+
+        // Data for 6 Wheels
         const wheelsData = [
             {
-                title: "🎨 Color Palette (রঙের খেলা)",
-                stepText: "ধাপ ১/৫: রঙের খেলা",
                 segments: ["লাল", "নীল", "সবুজ", "হলুদ"],
-                colors: ["#EF4444", "#3B82F6", "#10B981", "#F59E0B"]
+                colors: ["#FF5252", "#448AFF", "#4CAF50", "#FFC107"]
             },
             {
-                title: "📋 Master Plan (কর্মপরিকল্পনা)",
-                stepText: "ধাপ ২/৫: প্ল্যান সিলেকশন",
                 segments: ["প্ল্যান এ", "প্ল্যান বি", "প্ল্যান সি", "প্ল্যান ডি"],
-                colors: ["#8B5CF6", "#EC4899", "#06B6D4", "#F97316"]
+                colors: ["#AB47BC", "#EC407A", "#26C6DA", "#FFA726"]
             },
             {
-                title: "🔀 Lucky Choice (পছন্দ নির্বাচন)",
-                stepText: "ধাপ ৩/৫: চয়েস সিলেকশন",
                 segments: ["চয়েস ১", "চয়েস ২", "চয়েস ৩", "চয়েস ৪", "চয়েস ৫", "চয়েস ৬"],
-                colors: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"]
+                colors: ["#42A5F5", "#66BB6A", "#FFCA28", "#FF7043", "#AB47BC", "#EC407A"]
             },
             {
-                title: "💍 Future Queen (ভবিষ্যৎ স্ত্রীর আদ্যক্ষর)",
-                stepText: "ধাপ ৪/৫: নামের প্রথম অক্ষর",
                 segments: ["A", "B", "C", "D", "E", "F", "G", "H", "M", "N", "P", "R", "S", "T"],
-                colors: ["#F43F5E", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#06B6D4", "#84CC16", "#Eab308", "#A855F7", "#14B8A6", "#F97316", "#6366F1", "#475569"]
+                colors: ["#FF4081", "#7C4DFF", "#536DFE", "#40C4FF", "#1DE9B6", "#B2FF59", "#EEFF41", "#FFD740", "#FF6E40", "#E040FB", "#00E676", "#FF9100", "#3F51B5", "#FF5252"]
             },
             {
-                title: "🎭 Inner Personality (তোমার ভেতরের রূপ)",
-                stepText: "ধাপ ৫/৫: চরিত্র ও বৈশিষ্ট্য",
                 segments: ["স্মার্ট", "ভালো", "বুদ্ধিমতী", "গবোদ্ধ", "খারাপ", "পাগল", "আলসে"],
-                colors: ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444", "#EC4899", "#64748B"]
+                colors: ["#26A69A", "#42A5F5", "#7E57C2", "#FFB74D", "#EF5350", "#EC407A", "#78909C"]
+            },
+            {
+                segments: ["আজকে দিন ভালো যাবে", "আজকে দিন খারাপ যাবে", "তোমার বন্ধু পাগল", "তুমি পাগল"],
+                colors: ["#66BB6A", "#EF5350", "#FFA726", "#AB47BC"]
             }
         ];
 
-        let currentWheelIndex = 0;
-        let userResults = [];
-        let currentAngle = 0;
-        let isSpinning = false;
+        // State trackers for each wheel
+        const state = wheelsData.map(() => ({ currentAngle: 0, isSpinning: false }));
 
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const wheelTitle = document.getElementById('wheel-title');
-        const stepIndicator = document.getElementById('step-indicator');
-        const resultText = document.getElementById('result-text');
-        const spinBtn = document.getElementById('spin-btn');
-        const nextBtn = document.getElementById('next-btn');
-
-        function drawWheel() {
-            const current = wheelsData[currentWheelIndex];
+        // Render Canvas Wheel
+        function drawWheel(index) {
+            const canvas = document.getElementById(`wheel${index}`);
+            const ctx = canvas.getContext('2d');
+            const current = wheelsData[index];
             const segments = current.segments;
             const colors = current.colors;
             const sliceAngle = (2 * Math.PI) / segments.length;
 
-            ctx.clearRect(0, 0, 300, 300);
+            ctx.clearRect(0, 0, 250, 250);
 
             segments.forEach((segment, i) => {
-                const angle = i * sliceAngle + currentAngle;
+                const angle = i * sliceAngle + state[index].currentAngle;
                 
-                // Draw Slice
+                // Arc
                 ctx.beginPath();
-                ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 145, angle, angle + sliceAngle);
+                ctx.moveTo(125, 125);
+                ctx.arc(125, 125, 120, angle, angle + sliceAngle);
                 ctx.closePath();
                 ctx.fillStyle = colors[i % colors.length];
                 ctx.fill();
-                ctx.strokeStyle = '#1e293b';
-                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
                 ctx.stroke();
 
-                // Draw Text
+                // Text
                 ctx.save();
-                ctx.translate(150, 150);
+                ctx.translate(125, 125);
                 ctx.rotate(angle + sliceAngle / 2);
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 13px "Hind Siliguri", sans-serif';
-                ctx.fillText(segment, 125, 5);
+                ctx.font = 'bold 12px "Hind Siliguri", sans-serif';
+                ctx.fillText(segment, 105, 4);
                 ctx.restore();
             });
 
-            // Center Pin Circle
+            // Center Pin
             ctx.beginPath();
-            ctx.arc(150, 150, 18, 0, 2 * Math.PI);
-            ctx.fillStyle = '#0f172a';
+            ctx.arc(125, 125, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
             ctx.fill();
             ctx.lineWidth = 3;
-            ctx.strokeStyle = '#334155';
+            ctx.strokeStyle = '#cbd5e1';
             ctx.stroke();
         }
 
-        // Initialize first wheel
-        drawWheel();
+        // Draw all wheels on load
+        wheelsData.forEach((_, idx) => drawWheel(idx));
 
-        function startSpin() {
-            if (isSpinning) return;
-            isSpinning = true;
-            spinBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            resultText.innerText = "ঘুরছে...";
-            nextBtn.classList.add('hidden');
+        // Spin Logic
+        function spinSingleWheel(index) {
+            if (state[index].isSpinning) return;
 
-            const current = wheelsData[currentWheelIndex];
-            const segments = current.segments;
+            state[index].isSpinning = true;
+            const btn = document.getElementById(`btn${index}`);
+            const resultBox = document.getElementById(`result${index}`);
+            
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            resultBox.innerText = "ঘুরছে...";
+
+            const segments = wheelsData[index].segments;
             const sliceAngle = (2 * Math.PI) / segments.length;
 
-            // Random spin amount (between 5 to 8 full rotations + extra random angle)
             const randomSpins = Math.floor(Math.random() * 4) + 5;
             const extraAngle = Math.random() * (2 * Math.PI);
             const totalSpinAngle = (randomSpins * 2 * Math.PI) + extraAngle;
 
             let startTime = null;
-            const duration = 3500; // 3.5 seconds
+            const duration = 3500;
+            let lastSegmentIndex = -1;
 
             function animate(currentTime) {
                 if (!startTime) startTime = currentTime;
                 let progress = (currentTime - startTime) / duration;
 
                 if (progress < 1) {
-                    // Ease out cubic effect for smooth stopping
                     let easeProgress = 1 - Math.pow(1 - progress, 3);
-                    currentAngle = totalSpinAngle * easeProgress;
-                    drawWheel();
+                    state[index].currentAngle = totalSpinAngle * easeProgress;
+                    drawWheel(index);
+
+                    // Tick Sound Calculation
+                    const normalizedAngle = (state[index].currentAngle) % (2 * Math.PI);
+                    const currentPointerOffset = (1.5 * Math.PI - normalizedAngle + 2 * Math.PI) % (2 * Math.PI);
+                    const currentSegmentIndex = Math.floor(currentPointerOffset / sliceAngle) % segments.length;
+                    
+                    if (currentSegmentIndex !== lastSegmentIndex) {
+                        playTickSound();
+                        lastSegmentIndex = currentSegmentIndex;
+                    }
+
                     requestAnimationFrame(animate);
                 } else {
-                    currentAngle = totalSpinAngle;
-                    drawWheel();
-                    isSpinning = false;
-                    spinBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    state[index].currentAngle = totalSpinAngle;
+                    drawWheel(index);
+                    state[index].isSpinning = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
 
-                    // Calculate winning index based on Top-Center pointer (angle 3 * PI / 2)
-                    const normalizedAngle = (currentAngle) % (2 * Math.PI);
+                    // Calculate Winner
+                    const normalizedAngle = (state[index].currentAngle) % (2 * Math.PI);
                     const pointerOffset = (1.5 * Math.PI - normalizedAngle + 2 * Math.PI) % (2 * Math.PI);
                     const winningIndex = Math.floor(pointerOffset / sliceAngle) % segments.length;
                     
                     const winner = segments[winningIndex];
-                    resultText.innerText = `ফলাফল: ${winner}`;
-                    userResults[currentWheelIndex] = { title: current.title.split(' ')[1], value: winner };
+                    resultBox.innerText = `🎉 ফলাফল: ${winner}`;
 
-                    // Trigger confetti celebration
+                    // Confetti trigger
                     confetti({
-                        particleCount: 80,
-                        spread: 60,
-                        origin: { y: 0.6 }
+                        particleCount: 60,
+                        spread: 50,
+                        origin: { y: 0.7 }
                     });
-
-                    // Show next button or summary
-                    if (currentWheelIndex < wheelsData.length - 1) {
-                        nextBtn.classList.remove('hidden');
-                    } else {
-                        setTimeout(showSummary, 1500);
-                    }
                 }
             }
 
             requestAnimationFrame(animate);
         }
-
-        function nextWheel() {
-            if (currentWheelIndex < wheelsData.length - 1) {
-                currentWheelIndex++;
-                const current = wheelsData[currentWheelIndex];
-                wheelTitle.innerText = current.title;
-                stepIndicator.innerText = current.stepText;
-                resultText.innerText = "";
-                nextBtn.classList.add('hidden');
-                currentAngle = 0;
-                drawWheel();
-            }
-        }
-
-        function showSummary() {
-            const summaryContent = document.getElementById('summary-content');
-            summaryContent.innerHTML = userResults.map((item, idx) => `
-                <div class="flex justify-between border-b border-slate-800 pb-2">
-                    <span class="text-slate-400">হুইল ${idx + 1} (${item.title}):</span>
-                    <span class="font-bold text-pink-400">${item.value}</span>
-                </div>
-            `).join('');
-            document.getElementById('summary-modal').classList.remove('hidden');
-            document.getElementById('summary-modal').classList.add('flex');
-        }
-
-        function resetAll() {
-            currentWheelIndex = 0;
-            userResults = [];
-            currentAngle = 0;
-            document.getElementById('summary-modal').classList.add('hidden');
-            document.getElementById('summary-modal').classList.remove('flex');
-            const current = wheelsData[currentWheelIndex];
-            wheelTitle.innerText = current.title;
-            stepIndicator.innerText = current.stepText;
-            resultText.innerText = "";
-            nextBtn.classList.add('hidden');
-            drawWheel();
-        }
     </script>
 </body>
-  </html>
-  
+    </html>
+    
