@@ -1,1 +1,358 @@
-g
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fate & Fun with Spin Wheel</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #38bdf8;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Sound Buttons Section */
+        .sound-board {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+
+        .sound-board h3 {
+            color: #f43f5e;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .sound-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .sound-btn {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3);
+        }
+
+        .sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Wheel Card Section */
+        .wheels-container {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .wheel-card {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        .wheel-title {
+            color: #818cf8;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .wheel-box {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 15px auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(129, 140, 248, 0.2);
+        }
+
+        /* Clock-Hand Pointer Style */
+        .pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 35px;
+            z-index: 10;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+
+        .pointer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 22px solid #ef4444;
+        }
+
+        .pointer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            border: 2px solid #ef4444;
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .spin-btn:active {
+            transform: scale(0.95);
+        }
+
+        .result {
+            margin-top: 12px;
+            font-weight: bold;
+            color: #34d399;
+            min-height: 24px;
+            font-size: 1.05rem;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fate & Fun with Spin Wheel</h1>
+    <p class="subtitle">🥳 হই হুল্লোড়! মজায় কাটুক আজকের দিনটি ✨</p>
+
+    <!-- Sound Buttons -->
+    <div class="sound-board">
+        <h3>🔊 ফানি সাউন্ড ইফেক্টস</h3>
+        <div class="sound-buttons">
+            <button class="sound-btn" onclick="playSound('funny-sound-1.mp3')">Funny Sound 1</button>
+            <button class="sound-btn" onclick="playSound('funny-sound-2.mp3')">Funny Sound 2</button>
+            <button class="sound-btn" onclick="playSound('funny-sound-3.mp3')">Funny Sound 3</button>
+            <button class="sound-btn" onclick="playSound('funny-sound-4.mp3')">Funny Sound 4</button>
+            <button class="sound-btn" onclick="playSound('funny-sound-5.mp3')">Funny Sound 5</button>
+        </div>
+    </div>
+
+    <!-- Wheels Container -->
+    <div class="wheels-container" id="wheels-app"></div>
+
+    <footer>ওয়েবসাইট ক্রিয়েটেড বাই নীলাদ্রি</footer>
+
+    <script>
+        const wheelsData = [
+            {
+                title: "🎨 ১. রঙের খেলা (Color)",
+                options: ["হলুদ", "লাল", "নীল", "সবুজ"],
+                colors: ["#facc15", "#ef4444", "#3b82f6", "#22c55e"]
+            },
+            {
+                title: "📋 ২. মাস্টার প্ল্যান (Plan)",
+                options: ["প্ল্যান ১", "প্ল্যান ২", "প্ল্যান ৩", "প্ল্যান ৪"],
+                colors: ["#a855f7", "#ec4899", "#3b82f6", "#eab308"]
+            },
+            {
+                title: "🔀 ৩. লাকি চয়েস (Choice)",
+                options: ["চয়েস ১", "চয়েস ২", "চয়েস ৩", "চয়েস ৪", "চয়েস ৫", "চয়েস ৬"],
+                colors: ["#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"]
+            },
+            {
+                title: "💍 ৪. ভবিষ্যৎ স্ত্রী (A-Z)",
+                options: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+                colors: ["#f43f5e","#ec4899","#d946ef","#a855f7","#8b5cf6","#6366f1","#3b82f6","#0ea5e9","#06b6d4","#14b8a6","#10b981","#22c55e","#84cc16","#eab308","#f59e0b","#f97316","#ef4444","#f43f5e","#ec4899","#d946ef","#a855f7","#8b5cf6","#6366f1","#3b82f6","#0ea5e9","#06b6d4"]
+            },
+            {
+                title: "🔮 ৫. ভেতরের রূপ (Personality)",
+                options: ["পাগল", "আলস", "স্মার্ট", "ভালো", "বুদ্ধিমতী", "চালাক", "দয়ালু", "রাগী"],
+                colors: ["#f43f5e", "#10b981", "#3b82f6", "#06b6d4", "#a855f7", "#eab308", "#f97316", "#8b5cf6"]
+            },
+            {
+                title: "🔮 ৬. আজকের ভাগ্য ও বন্ধু",
+                options: ["তুমি পাগল", "কে দিন ভালো যাবে", "কে দিন খারাপ যাবে", "তোমার বন্ধু তোকে ভালোবাসে"],
+                colors: ["#a855f7", "#10b981", "#ef4444", "#eab308"]
+            }
+        ];
+
+        function playSound(src) {
+            const audio = new Audio(src);
+            audio.play().catch(e => console.log("Audio file not found:", src));
+        }
+
+        function createWheels() {
+            const container = document.getElementById('wheels-app');
+
+            wheelsData.forEach((wheel, index) => {
+                const card = document.createElement('div');
+                card.className = 'wheel-card';
+                card.innerHTML = `
+                    <div class="wheel-title">${wheel.title}</div>
+                    <div class="wheel-box">
+                        <div class="pointer"></div>
+                        <canvas id="canvas-${index}" width="300" height="300"></canvas>
+                    </div>
+                    <button class="spin-btn" onclick="spinWheel(${index})">স্পিন করুন! ⚙️</button>
+                    <div class="result" id="result-${index}"></div>
+                `;
+                container.appendChild(card);
+                drawWheel(index, 0);
+            });
+        }
+
+        const currentAngles = new Array(wheelsData.length).fill(0);
+
+        function drawWheel(index, angle) {
+            const canvas = document.getElementById(`canvas-${index}`);
+            const ctx = canvas.getContext('2d');
+            const data = wheelsData[index];
+            const numOptions = data.options.length;
+            const arcSize = (2 * Math.PI) / numOptions;
+            const radius = canvas.width / 2;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < numOptions; i++) {
+                const startAngle = angle + i * arcSize;
+                const endAngle = startAngle + arcSize;
+
+                ctx.beginPath();
+                ctx.fillStyle = data.colors[i % data.colors.length];
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius - 5, startAngle, endAngle);
+                ctx.fill();
+                ctx.strokeStyle = '#1e293b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw Text
+                ctx.save();
+                ctx.fillStyle = "#ffffff";
+                ctx.font = numOptions > 15 ? "bold 11px sans-serif" : "bold 14px sans-serif";
+                ctx.translate(radius, radius);
+                ctx.rotate(startAngle + arcSize / 2);
+                ctx.textAlign = "right";
+                ctx.fillText(data.options[i], radius - 20, 5);
+                ctx.restore();
+            }
+        }
+
+        function spinWheel(index) {
+            const resultDiv = document.getElementById(`result-${index}`);
+            resultDiv.innerText = "";
+            
+            const extraRotations = 5 + Math.floor(Math.random() * 5);
+            const randomAngle = Math.random() * 2 * Math.PI;
+            const targetAngle = currentAngles[index] + (extraRotations * 2 * Math.PI) + randomAngle;
+            
+            const duration = 3000;
+            const startTime = performance.now();
+            const startAngle = currentAngles[index];
+
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                if (elapsed < duration) {
+                    const progress = elapsed / duration;
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = startAngle + (targetAngle - startAngle) * easeOut;
+                    drawWheel(index, current);
+                    requestAnimationFrame(animate);
+                } else {
+                    currentAngles[index] = targetAngle % (2 * Math.PI);
+                    drawWheel(index, currentAngles[index]);
+                    
+                    // Calculate Result
+                    const data = wheelsData[index];
+                    const numOptions = data.options.length;
+                    const arcSize = (2 * Math.PI) / numOptions;
+                    
+                    let normalizedAngle = (3 * Math.PI / 2 - currentAngles[index]) % (2 * Math.PI);
+                    if (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+                    
+                    const winningIndex = Math.floor(normalizedAngle / arcSize);
+                    resultDiv.innerText = `ফলাফল: ${data.options[winningIndex]}`;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = createWheels;
+    </script>
+</body>
+  </html>
+              
